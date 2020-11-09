@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet" type="text/css"
+	th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}" />
+<title>Make Payment</title>
+</head>
+<body>
+
+
+	<div th:include="_navbar"></div>
+
+	<br>
+	<br>
+	
+	
+
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6 col-md-offset-3">
+
+				<div th:if="${param.success}">
+					<div class="alert alert-info">You've successfully made a
+						payment!</div>
+				</div>
+
+				<h1>Make Payment</h1>
+				<form th:action="@{/makePayment}" th:object="${payment}"
+					method="post">
+
+					<p class="error-message" th:if="${#fields.hasGlobalErrors()}"
+						th:each="error : ${#fields.errors('global')}" th:text="${error}">Validation
+						error</p>
+
+					<div sec:authorize="hasRole('ROLE_ADMIN')" class="form-group"
+						th:classappend="${#fields.hasErrors('debitAccount')}? 'has-error':''">
+						<label for="debitAccount" class="control-label">Debit
+							Account</label> <input id="debitAccount" class="form-control"
+							th:field="*{debitAccount}" />
+						<p class="error-message"
+							th:each="error: ${#fields.errors('debitAccount')}"
+							th:text="${error}">Validation error</p>
+					</div>
+
+					<div sec:authorize="hasRole('ROLE_USER')" class="form-group"
+						th:classappend="${#fields.hasErrors('debitAccount')}? 'has-error':''">
+						<label for="debitAccount" class="control-label">Debit
+							Account</label> <select class="form-control" id="debitAccount"
+							th:field="*{debitAccount}">
+
+							<option value="">--</option>
+							<option th:each="acc : ${accounts}" th:value="${acc.number}"
+								th:utext="${acc.number}" />
+
+						</select>
+						<p class="error-message"
+							th:each="error: ${#fields.errors('debitAccount')}"
+							th:text="${error}">Validation error</p>
+					</div>
+
+
+
+					<div class="form-group"
+						th:classappend="${#fields.hasErrors('creditAccount')}? 'has-error':''">
+						<label for="creditAccount" class="control-label">Credit
+							Account</label> <input id="creditAccount" class="form-control"
+							th:field="*{creditAccount}" />
+						<p class="error-message"
+							th:each="error: ${#fields.errors('creditAccount')}"
+							th:text="${error}">Validation error</p>
+					</div>
+
+					<div class="form-group"
+						th:classappend="${#fields.hasErrors('amount')}? 'has-error':''">
+						<label for="amount" class="control-label">Amount</label> <input
+							id="amount" class="form-control" th:field="*{amount}" />
+						<p class="error-message"
+							th:each="error: ${#fields.errors('amount')}" th:text="${error}">Validation
+							error</p>
+					</div>
+
+
+					<div class="form-group"
+						th:classappend="${#fields.hasErrors('currency')}? 'has-error':''">
+						<label for="currency" class="control-label">Currency</label> <select
+							class="form-control" id="currency" th:field="*{currency}">
+							<option value="EUR">EUR</option>
+							<option value="USD">USD</option>
+							<option value="RON">RON</option>
+							<option value="HUF">HUF</option>
+						</select>
+						<p class="error-message"
+							th:each="error : ${#fields.errors('currency')}"
+							th:text="${error}">Validation error</p>
+					</div>
+
+					<div class="form-group"
+						th:classappend="${#fields.hasErrors('ref')}? 'has-error':''">
+						<label for="ref" class="control-label">References</label> <input
+							id="amount" class="form-control" th:field="*{ref}" />
+						<p class="error-message" th:each="error: ${#fields.errors('ref')}"
+							th:text="${error}">Validation error</p>
+					</div>
+
+					<div class="form-group">
+						<button type="submit" class="btn btn-success">Make
+							Payment</button>
+
+					</div>
+
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript"
+		th:src="@{/webjars/jquery/3.2.1/jquery.min.js/}"></script>
+	<script type="text/javascript"
+		th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
+</body>
+</html>
+

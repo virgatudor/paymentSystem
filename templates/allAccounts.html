@@ -1,0 +1,116 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>All Accounts</title>
+</head>
+
+
+<link rel="stylesheet" type="text/css"
+	th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}" />
+	
+<link href="../static/css/style.css" th:href="@{/css/style.css}" rel="stylesheet" />
+
+
+<body>
+
+	<div th:include="_navbar"></div>
+
+	<br>
+	<br>
+	
+
+
+
+
+
+
+
+	<div>
+		<h2 class="diva">Accounts</h2>
+		<br>
+		<div style="align-content: center; text-align: center;">
+			<input style="text-align: center; align-content: center;"
+				id="myInput" type="text" placeholder="Search..">
+		</div>
+		<br>
+		<table
+			class="table table-striped table-hover table-condensed table-bordered">
+
+			<thead>
+				<tr>
+					<th>Details</th>
+					<th>Number</th>
+					<th>Name</th>
+					<th>Address</th>
+					<th>Currency</th>
+					<th>Status</th>
+					<th sec:authorize="hasRole('ROLE_ADMIN')">Edit</th>
+					<th sec:authorize="hasRole('ROLE_ADMIN')">Delete</th>
+				</tr>
+			</thead>
+
+			<tbody id="myTable">
+				<tr th:if="${accounts.empty}">
+					<td colspan="8">No accounts available</td>
+				</tr>
+
+				<tr th:each="account : ${accounts}">
+					<td><a
+						th:href="@{/account/{number}( number=${account.number})}"
+						class="btn btn-success"> <i class="fas fa-user-times ml-2"></i>
+							<span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span></a>
+
+
+					</td>
+					<td><span th:text="${account.number}"> No </span></td>
+					<td><span th:text="${account.name}"> Name </span></td>
+					<td><span th:text="${account.address}"> Address </span></td>
+					<td><span th:text="${account.currency}"> Currency </span></td>
+					<td><span th:text="${account.status}"> Status </span></td>
+
+
+					<td sec:authorize="hasRole('ROLE_ADMIN')"><a
+						th:href="@{/updateAccount/{number}(number=${account.number})}"
+						class="btn btn-success"> <i class="fas fa-user-times ml-2"></i>
+							<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+					</a></td>
+					<td sec:authorize="hasRole('ROLE_ADMIN')"><a
+						th:href="@{/delete/account/{number}(number=${account.number})}"
+						class="btn btn-danger"> <i class="fas fa-user-times ml-2"></i>
+							<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+					</a></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	
+	
+	<div style="display: flex; flex-direction: row; justify-content:center;">
+<a th:unless="${pageNumber}==1" th:href="@{/allAccounts/{pageNumber}( pageNumber=${pageNumber}-1)}"
+			class="btn btn-success"> <i class="fas fa-user-times ml-2"></i> <span
+			class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></a>
+			
+			<a style="background-color: #333; border-color:#333;"  th:text="${pageNumber}"
+			class="btn btn-success" > <i class="fas fa-user-times ml-2"></i> </a>
+			
+			
+		<a th:if="${pageNumber < upperLimit}"   th:href="@{/allAccounts/{pageNumber}( pageNumber=${pageNumber}+1)}"
+			class="btn btn-success"> <i class="fas fa-user-times ml-2"></i> <span
+			class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
+		
+	</div>
+
+</body>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  $("#myInput").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#myTable tr").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+</script>
+</html>

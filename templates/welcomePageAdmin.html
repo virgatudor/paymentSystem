@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Admin Page</title>
+</head>
+
+
+
+<link rel="stylesheet" type="text/css"
+	th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}" />
+<body>
+
+	<div th:include="_navbar"></div>
+
+	<br>
+	<br>
+	<br>
+
+	<div class="jumbotron">
+		<h1>
+			Welcome <span sec:authentication="principal.username"></span>
+		</h1>
+
+
+	</div>
+
+
+
+
+
+</body>
+</html>

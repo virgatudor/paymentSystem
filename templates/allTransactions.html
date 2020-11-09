@@ -1,0 +1,115 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>All Transactions</title>
+</head>
+
+
+<link rel="stylesheet" type="text/css"
+	th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}" />
+	
+	<link href="../static/css/style.css" th:href="@{/css/style.css}" rel="stylesheet" />
+
+
+<body>
+
+	<div th:include="_navbar"></div>
+
+	<br>
+	<br>
+	<br>
+
+
+
+	<h2 class="diva">Transactions</h2>
+	<br>
+	<div style="align-content: center; text-align: center;">
+		<input style="text-align: center; align-content: center;" id="myInput"
+			type="text" placeholder="Search..">
+	</div>
+	<br>
+	<div>
+	<table
+		class="table table-striped table-hover table-condensed table-bordered">
+
+		<thead>
+			<tr>
+				<th>Date</th>
+				<th>Debit Account/Currency</th>
+				<th>+</th>
+				<th>Credit Account/Currency</th>
+				<th>-</th>
+				<th>Currency</th>
+				<th>Amount</th>
+				<th>Status</th>
+				<th>References</th>
+				<th>Performer</th>
+
+			</tr>
+		</thead>
+
+		<tbody id="myTable">
+			<tr th:if="${#maps.isEmpty(payments)}">
+				<td colspan="10">No transactions available</td>
+			</tr>
+
+			<tr th:each="payment : ${payments}">
+				<td><span
+					th:text="${#temporals.format(payment.key.date, 'dd-MM-yyyy->HH:mm')}">
+						Date </span></td>
+				<td><span
+					th:text="${payment.key.debitAccount.number + '/' + payment.key.debitAccount.currency}">
+						Debit Account </span></td>
+				<td><span
+					th:text="${#numbers.formatDecimal(payment.value.key,2,2)}">
+						+ </span></td>
+				<td><span
+					th:text="${payment.key.creditAccount.number + '/' + payment.key.creditAccount.currency}">
+						Credit Account </span></td>
+				<td><span
+					th:text="${#numbers.formatDecimal(payment.value.value,2,2)}">
+						- </span></td>
+				<td><span th:text="${payment.key.currency}"> Currency </span></td>
+				<td><span th:text="${payment.key.amount}"> Amount </span></td>
+				<td><span th:text="${payment.key.status}"> Status </span></td>
+				<td><span th:text="${payment.key.ref}"> References </span></td>
+				<td><span th:text="${payment.key.performer}"> Performer</span></td>
+			</tr>
+		</tbody>
+		
+	</table>
+		
+		
+		</div>
+
+	<div style="display: flex; flex-direction: row; justify-content:center;">
+
+<a th:unless="${pageNumber}==1" th:href="@{/allTransactions/{pageNumber}( pageNumber=${pageNumber}-1)}"
+			class="btn btn-success"> <i class="fas fa-user-times ml-2"></i> <span
+			class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></a>
+			
+			<a style="background-color: #333; border-color:#333;"  th:text="${pageNumber}"
+			class="btn btn-success" > <i class="fas fa-user-times ml-2"></i> </a>
+			
+			
+		<a th:if="${pageNumber < upperLimit}"   th:href="@{/allTransactions/{pageNumber}( pageNumber=${pageNumber}+1)}"
+			class="btn btn-success"> <i class="fas fa-user-times ml-2"></i> <span
+			class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
+		
+	</div>
+	
+		
+</body>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  $("#myInput").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#myTable tr").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+</script>
+</html>

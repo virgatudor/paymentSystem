@@ -1,0 +1,262 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Account Page</title>
+</head>
+
+
+<link rel="stylesheet" type="text/css"
+	th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}" />
+
+<link
+	href="https://fonts.googleapis.com/css?family=Bitter|Bree+Serif&display=swap"
+	rel="stylesheet">
+
+
+<link href="../static/css/style.css" th:href="@{/css/style.css}" rel="stylesheet" />
+
+
+<body>
+
+	<div th:include="_navbar"></div>
+
+	<br>
+	<br>
+	<br>
+
+
+
+	<div style="display: flex; justify-content: center; flex-direction: column; ">
+		<h3>
+			Account No: <span th:text="${acc.number}" class="label label-default"></span>
+		</h3>
+
+		<h3>
+			Balance: <span style="background-color: #5cb85c;"
+				th:text="${available}" class="label label-default"></span>
+		</h3>
+
+		<h3>
+			Currency: <span th:text="${acc.currency}" class="label label-default">curr</span>
+		</h3>
+	</div>
+
+
+	<h2 class="diva" onclick="myFunction()">Search Balance</h2>
+
+
+	<div id="myDIV">
+		<form style="text-align: center;" th:object="${balansSearch}"
+			th:action="@{/account/{number}/search (number = ${acc.number})}"
+			method="get">
+
+			<label>From: </label><input type="datetime-local" id="dateTime"
+				name="from" th:value="${to}" value="2019-07-16T16:35" /> <label>To:
+			</label><input type="datetime-local" id="dateTime" name="to"
+				th:value="${from}" value="2019-07-16T16:35" /> <input type="submit"
+				value="Search" class="btn btn-success" />
+			<div th:if="${not #maps.isEmpty(balansSearch)}">
+
+				<table
+					class="table table-striped table-hover table-condensed table-bordered">
+
+					<thead>
+						<tr>
+							<th>Date</th>
+							<th>Amount</th>
+							<th>Last Transaction</th>
+
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="balan : ${balansSearch}">
+							<td><span
+								th:text="${#temporals.format(balan.key.date, 'dd-MM-yyyy->HH:mm')}">
+									Date </span></td>
+							<td><span
+								th:text="${#numbers.formatDecimal(balan.key.amount,2,2)}">
+									Balance </span></td>
+							<td th:if="${balan.value > 0}" style="color: green;">+<span
+								th:text="${#numbers.formatDecimal(balan.value,2,2)}">
+									Last Transaction </span></td>
+							<td th:unless="${balan.value > 0}" style="color: red;"><span
+								th:text="${#numbers.formatDecimal(balan.value,2,2)}">
+									Last Transaction </span></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</form>
+	</div>
+
+
+	<h2 onclick="myFunction1()" class="diva">Balance History</h2>
+
+	<div id="myDIV1">
+
+		<table
+			class="table table-striped table-hover table-condensed table-bordered ">
+			<thead>
+				<tr>
+					<th>Date</th>
+					<th>Amount</th>
+					<th>Last Transaction</th>
+
+
+				</tr>
+			</thead>
+			<tbody>
+
+				<tr th:each="balan : ${balans}">
+					<td><span
+						th:text="${#temporals.format(balan.key.date, 'dd-MM-yyyy->HH:mm')}">
+							Date </span></td>
+					<td><span
+						th:text="${#numbers.formatDecimal(balan.key.amount,2,2)}">
+							Balance </span></td>
+					<td th:if="${balan.value > 0}" style="color: green;">+<span
+						th:text="${#numbers.formatDecimal(balan.value,2,2)}"> Last
+							Transaction </span></td>
+					<td th:unless="${balan.value > 0}" style="color: red;"><span
+						th:text="${#numbers.formatDecimal(balan.value,2,2)}"> Last
+							Transaction </span></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<h2 onclick="myFunction2()" class="diva">Debitor</h2>
+
+	<div id="myDIV2">
+		<!--  -->
+		<table
+			class="table table-striped table-hover table-condensed table-bordered ">
+			<thead>
+				<tr>
+					<th>Amount</th>
+					<th>Currency</th>
+					<th>Status</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:if="${debitor.empty}">
+					<td colspan="6">No transactions as a debitor</td>
+				</tr>
+				<tr th:each="debit : ${debitor}">
+					<td><span th:text="${debit.amount}"> Amount </span></td>
+					<td><span th:text="${debit.currency}"> Currency </span></td>
+					<td><span th:text="${debit.status}"> Status </span></td>
+
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<h2 onclick="myFunction3()" class="diva">Creditor</h2>
+
+	<div id="myDIV3">
+		<table
+			class="table table-striped table-hover table-condensed table-bordered ">
+			<thead>
+				<tr>
+					<th>Amount</th>
+					<th>Currency</th>
+					<th>Status</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:if="${creditor.empty}">
+					<td colspan="6">No transactions as a creditor</td>
+				</tr>
+				<tr th:each="credit : ${creditor}">
+					<td><span th:text="${credit.amount}"> Amount </span></td>
+					<td><span th:text="${credit.currency}"> Currency </span></td>
+					<td><span th:text="${credit.status}"> Status </span></td>
+
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+
+
+	<h2 onclick="myFunction4()" class="diva">Audit</h2>
+
+	<div class="divas" id="myDIV4">
+		<table
+			class="table table-striped table-hover table-condensed table-bordered">
+			<thead>
+				<tr>
+					<th>Time</th>
+					<th>Operation</th>
+					<th>Performer</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:if="${audits.empty}">
+					<td colspan="6">No audit available</td>
+				</tr>
+				<tr th:each="audit : ${audits}">
+					<td><span
+						th:text="${#temporals.format(audit.time, 'dd-MM-yyyy->HH:mm')}">
+							Time </span></td>
+					<td><span th:text="${audit.operation}"> Operation </span></td>
+					<td><span th:text="${audit.performer}"> Performer </span></td>
+
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+
+
+
+</body>
+
+
+<script type="text/javascript">
+	function myFunction() {
+		var x = document.getElementById('myDIV');
+		if (x.style.display === "none") {
+			x.style.display = "block";
+		} else {
+			x.style.display = "none";
+		}
+	}
+
+	function myFunction1() {
+		var x = document.getElementById('myDIV1');
+		if (x.style.display === "none") {
+			x.style.display = "block";
+		} else {
+			x.style.display = "none";
+		}
+	}
+
+	function myFunction2() {
+		var x = document.getElementById('myDIV2');
+		if (x.style.display === "none") {
+			x.style.display = "block";
+		} else {
+			x.style.display = "none";
+		}
+	}
+
+	function myFunction3() {
+		var x = document.getElementById('myDIV3');
+		if (x.style.display === "none") {
+			x.style.display = "block";
+		} else {
+			x.style.display = "none";
+		}
+	}
+	function myFunction4() {
+		var x = document.getElementById('myDIV4');
+		if (x.style.display === "none") {
+			x.style.display = "block";
+		} else {
+			x.style.display = "none";
+		}
+	}
+</script>
+</html>

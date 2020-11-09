@@ -1,0 +1,121 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Search Transaction</title>
+</head>
+
+
+<link rel="stylesheet" type="text/css"
+	th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}" />
+	
+	<link href="../static/css/style.css" th:href="@{/css/style.css}" rel="stylesheet" />
+
+
+<body>
+
+<div th:include="_navbar"></div>
+
+	<br>
+	<br>
+
+<h2 class="diva">Filter Transactions</h2>
+
+	<div id="myDIV">
+		<form style="text-align: center;" 
+			th:action="@{/searchTransaction/result/}"
+			method="get">
+			
+			<h2>STATUS</h2>
+			 <div style="align-items: center;">
+			 <select  id="status" name="status"
+				th:value="${status}">
+									<option value="VERIFY">VERIFY</option>
+									<option value="APPROVE">APPROVE</option>
+									<option value="CANCELLED">CANCELLED</option>
+									<option value="COMPLETED">COMPLETED</option>
+									<option value="AUTHORIZE">AUTHORIZE</option>
+				</select> 
+				<br>
+				<br>
+				
+				
+				<div class="form-group">
+						<button type="submit" class="btn btn-success">Filter</button>
+
+					</div>
+			</div>
+			</form>
+			</div>
+			
+			
+		<h2 style="text-align: center;" th:if="${msg} != null" th:text="${msg}"></h2>
+		
+		<div >
+	<table th:unless="${#maps.isEmpty(payments)}"
+		class="table table-striped table-hover table-condensed table-bordered">
+
+		<thead>
+			<tr>
+				<th>Date</th>
+				<th>Debit Account/Currency</th>
+				<th>+</th>
+				<th>Credit Account/Currency</th>
+				<th>-</th>
+				<th>Currency</th>
+				<th>Amount</th>
+				<th>Status</th>
+				<th>References</th>
+				<th>Performer</th>
+
+			</tr>
+		</thead>
+
+		<tbody id="myTable">
+			
+
+			<tr th:each="payment : ${payments}">
+				<td><span
+					th:text="${#temporals.format(payment.key.date, 'dd-MM-yyyy->HH:mm')}">
+						Date </span></td>
+				<td><span
+					th:text="${payment.key.debitAccount.number + '/' + payment.key.debitAccount.currency}">
+						Debit Account </span></td>
+				<td><span
+					th:text="${#numbers.formatDecimal(payment.value.key,2,2)}">
+						+ </span></td>
+				<td><span
+					th:text="${payment.key.creditAccount.number + '/' + payment.key.creditAccount.currency}">
+						Credit Account </span></td>
+				<td><span
+					th:text="${#numbers.formatDecimal(payment.value.value,2,2)}">
+						- </span></td>
+				<td><span th:text="${payment.key.currency}"> Currency </span></td>
+				<td><span th:text="${payment.key.amount}"> Amount </span></td>
+				<td><span th:text="${payment.key.status}"> Status </span></td>
+				<td><span th:text="${payment.key.ref}"> References </span></td>
+				<td><span th:text="${payment.key.performer}"> Performer</span></td>
+			</tr>
+		</tbody>
+		
+	</table>
+		</div>
+		
+		<div th:unless="${#maps.isEmpty(payments)}" style="display: flex; flex-direction: row; justify-content:center;">
+
+<a th:unless="${pageNumber}==1" th:href="@{/searchTransaction/result/}"
+			class="btn btn-success"> <i class="fas fa-user-times ml-2"></i> <span
+			class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></a>
+			
+			<a style="background-color: #333; border-color:#333;"  th:text="${pageNumber}"
+			class="btn btn-success" > <i class="fas fa-user-times ml-2"></i> </a>
+			
+			
+		<a th:if="${pageNumber < upperLimit}"   th:href="@{/searchTransaction/result/}"
+			class="btn btn-success"> <i class="fas fa-user-times ml-2"></i> <span
+			class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
+		
+	</div>
+
+
+</body>
+</html>

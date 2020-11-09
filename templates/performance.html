@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Le Mans</title>
+</head>
+<body>
+
+<div th:include="_navbar"></div>
+
+	<br>
+	<br>
+	<br>
+
+
+
+	<div style="display:flex; align-content:center; justify-content:space-between; flex-direction:column;">
+		<a th:href="@{/generateAccounts/}" class="btn btn-success"> <i
+			class="fas fa-user-times ml-2"></i> Generate Accounts
+		</a> <br> <br> <br> <a th:href="@{/go/}" class="btn btn-success"> <i
+			class="fas fa-user-times ml-2"></i> Start Load Testing
+		</a>
+
+	</div>
+
+</body>
+</html>

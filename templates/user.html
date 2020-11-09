@@ -1,0 +1,134 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>User Page</title>
+</head>
+<style>
+.diva {
+	color: white;
+	box-shadow: #333 0px 0px 8px 0px;
+	background-color: #5cb85c;
+	font-weight: 500;
+	color: white;
+	width: 100%;
+	text-align: center;
+}
+</style>
+
+<link rel="stylesheet" type="text/css"
+	th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}" />
+<body>
+
+	<div th:include="_navbar"></div>
+
+	<br>
+	<br>
+	<br>
+
+
+
+
+
+
+
+	<div>
+		<h2 class="diva">Accounts</h2>
+		<div sec:authorize="hasRole('ROLE_ADMIN')" class="form-group">
+
+
+			<a th:href="@{/user/{username}/addAccount(username=${user.username})}"
+				class="btn btn-success"> <i class="fas fa-user-times ml-2"></i>
+				Add Account
+			</a>
+		</div>
+		<table
+			class="table table-striped table-hover table-condensed table-bordered">
+
+			<thead>
+				<tr>
+					<th>Details</th>
+					<th id="user">Number</th>
+					<th>Name</th>
+					<th>Address</th>
+					<th>Currency</th>
+					<th>Status</th>
+					<th sec:authorize="hasRole('ROLE_ADMIN')">Edit</th>
+					<th sec:authorize="hasRole('ROLE_ADMIN')">Delete</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr th:if="${accounts.empty}">
+					<td colspan="8">No accounts available</td>
+				</tr>
+
+				<tr th:each="account : ${accounts}">
+					<td><a
+						th:href="@{/account/{number}( number=${account.number})}"
+						class="btn btn-success"> <i class="fas fa-user-times ml-2"></i>
+							<span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span></a>
+
+
+					</td>
+					<td><span th:text="${account.number}"> No </span></td>
+					<td><span th:text="${account.name}"> Name </span></td>
+					<td><span th:text="${account.address}"> Address </span></td>
+					<td><span th:text="${account.currency}"> Currency </span></td>
+					<td><span th:text="${account.status}"> Status </span></td>
+
+
+					<td sec:authorize="hasRole('ROLE_ADMIN')"><a
+						th:href="@{/updateAccount/{number}(number=${account.number})}"
+						class="btn btn-success"> <i class="fas fa-user-times ml-2"></i>
+							<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+					</a></td>
+					<td sec:authorize="hasRole('ROLE_ADMIN')"><a
+						th:href="@{/delete/account/{number}(number=${account.number})}"
+						class="btn btn-danger"> <i class="fas fa-user-times ml-2"></i>
+							<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+					</a></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+
+
+
+	<div>
+		<h2 class="diva">Audit</h2>
+		<table
+			class="table table-striped table-hover table-condensed table-bordered">
+
+			<thead>
+				<tr>
+
+					<th>Time</th>
+					<th>Operation</th>
+					<th>Performer</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:if="${audits.empty}">
+					<td colspan="6">No audit available</td>
+				</tr>
+				<tr th:each="audit : ${audits}">
+					<td><span
+						th:text="${#temporals.format(audit.time, 'dd-MM-yyyy->HH:mm')}">
+							Time </span></td>
+					<td><span th:text="${audit.operation}"> Operation </span></td>
+					<td><span th:text="${audit.performer}"> Performer </span></td>
+
+				</tr>
+			</tbody>
+		</table>
+
+	</div>
+
+
+</body>
+
+
+</head>
+<body>
+</html>

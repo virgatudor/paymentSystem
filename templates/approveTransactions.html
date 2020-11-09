@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Approval</title>
+</head>
+
+
+<link rel="stylesheet" type="text/css"
+	th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}" />
+<body>
+
+	<div th:include="_navbar"></div>
+
+	<br>
+	<br>
+	<br>
+
+
+	<table
+		class="table table-striped table-hover table-condensed table-bordered">
+		<h2 style="text-align: center;">WAITING FOR APPROVAL...</h2>
+
+		<div class="progress">
+			<div
+				class="progress-bar progress-bar-success progress-bar-striped active"
+				style="width: 50%">
+				<span class="sr-only">50% Complete (success)</span>
+			</div>
+			<div
+				class="progress-bar progress-bar-striped active progress-bar-active"
+				style="width: 50%">
+				<span class="sr-only">50% Complete (active)</span>
+			</div>
+
+
+		</div>
+
+
+		<thead>
+			<tr>
+				<th>Amount</th>
+				<th>Currency</th>
+				<th>Status</th>
+				<th>References</th>
+				<th>Approve</th>
+
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:if="${transactions.empty}">
+				<td colspan="6">No transactions waiting for completion</td>
+			</tr>
+			<tr th:each="transaction : ${transactions}">
+				<td><span th:text="${transaction.amount}"> Amount </span></td>
+				<td><span th:text="${transaction.currency}"> Currency </span></td>
+				<td><span th:text="${transaction.status}"> Status </span></td>
+				<td><span th:text="${transaction.ref}"> Status </span></td>
+				<td><a
+					th:href="@{/approveTransactions/transaction/{id} (id=${transaction.id})}"
+					class="btn btn-success"> <i class="fas fa-user-times ml-2"></i>
+						<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span></a>
+
+				</td>
+
+
+
+
+
+			</tr>
+		</tbody>
+</body>
+</html>
